@@ -1,13 +1,3 @@
-import os
-import random
-import cv2
-import pandas as pd
-import numpy as np
-import logging
-from concurrent.futures import ThreadPoolExecutor
-from scipy.interpolate import interp1d
-
-
 def process_folder(folder, dataset_dir, output_dir):
     """
     This function processes a single folder, iterating over all video files in the folder,
