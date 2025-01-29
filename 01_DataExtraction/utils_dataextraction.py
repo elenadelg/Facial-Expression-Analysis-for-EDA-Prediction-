@@ -1,7 +1,6 @@
 import os
 import random
 import cv2
-# Uses OpenCV's `VideoCapture` to open the video file for frame extraction and processing
 import pandas as pd
 import numpy as np
 import logging
@@ -54,27 +53,17 @@ def process_folder(folder, dataset_dir, output_dir):
         except Exception as e:
             logging.error(f"Failed to read EDA/BVP files. Error: {e}")
             continue
-
         eda_sampling_rate = 4  # 4 Hz
         bvp_sampling_rate = 64  # 64 Hz
-        averaging_factor = int(bvp_sampling_rate / eda_sampling_rate) # 64/4 = 18 -> take 18 bvp signals and average them to get corresponding bvp signal
-        # Calculates the factor needed to downsample the BVP data to match the lower sampling rate of the EDA data
-
+        averaging_factor = int(bvp_sampling_rate / eda_sampling_rate) 
         bvp_downsampled = bvp_data.iloc[:, 0].groupby(bvp_data.index // averaging_factor).mean().reset_index(drop=True)
-        # Downsamples the BVP data by averaging over groups of samples to match the EDA sampling rate.
         logging.info(f"BVP data downsampled. Averaging factor: {averaging_factor}")
 
         # Open video and extract frames
         cap = cv2.VideoCapture(video_path)
-        video_fps = cap.get(cv2.CAP_PROP_FPS) # Frames per second (FPS): 35.138
-        # Retrieves the frames per second (FPS) of the video, which is essential for calculating frame timestamps
-
-        video_length = cap.get(cv2.CAP_PROP_FRAME_COUNT) / video_fps # Duration of the video: 180 seconds
-                                                                    # Total number of frames: 6325 
-                                                                    # 180 seconds x 35.138 FPS = 6325
-        frame_timestamps = np.linspace(0, video_length, num=len(eda_data))
-        # Generates a series of timestamps evenly spaced over the video's duration to synchronize video frames with EDA data.
-
+        video_fps = cap.get(cv2.CAP_PROP_FPS) 
+        video_length = cap.get(cv2.CAP_PROP_FRAME_COUNT) / video_fps 
+        frame_timestamps = np.linspace(0, video_length, num=len(eda_data)) # to synchronize video frames with EDA data.
         frame_timestamps[-1] = min(frame_timestamps[-1], video_length - 1.0 / video_fps)
         all_frames_data = []  # List to store frame filenames and corresponding signals
         for i, timestamp in enumerate(frame_timestamps, start=1):
@@ -96,8 +85,6 @@ def process_folder(folder, dataset_dir, output_dir):
         output_csv_path = os.path.join(output_dir, f"Dataset_{folder}_{T_part}.csv")
         frames_df.to_csv(output_csv_path, index=False)
         logging.info(f"Dataset saved to: {output_csv_path}")
-        # csv files with thre cols: 'Frames', 'eda', 'bvp' 
-            # tot signals and frames per video: 4 (eda HZ) x 180 = 720 
 
 
 def process_folders_parallel(dataset_dir, output_dir):
