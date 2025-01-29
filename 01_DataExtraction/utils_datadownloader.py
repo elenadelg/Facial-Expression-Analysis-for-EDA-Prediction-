@@ -1,11 +1,3 @@
-import requests
-from tqdm import tqdm
-from pathlib import Path
-import zipfile
-import tempfile
-from concurrent.futures import ThreadPoolExecutor, as_completed
-
-
 def download_and_extract_dataset(email, password, dataset_url, output_dir):
 
     """
