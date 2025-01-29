@@ -1,7 +1,3 @@
-import os
-import glob
-import pandas as pd
-
 for file_path in csv_files:
     df = pd.read_csv(file_path)
     
