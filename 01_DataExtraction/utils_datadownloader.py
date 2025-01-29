@@ -1,6 +1,5 @@
 import requests
 from tqdm import tqdm
-# The `tqdm` library provides a progress bar, giving the user visual feedback during the dataset download process
 from pathlib import Path
 import zipfile
 import tempfile
@@ -12,12 +11,6 @@ def download_and_extract_dataset(email, password, dataset_url, output_dir):
     """
     This function logs in to the IEEE Dataport with the provided credentials, downloads the dataset from the given URL (IEEE Dataport),
     and extracts the content to the specified output directory.
-
-    Args:
-        email (str): The email address used for logging in to IEEE Dataport.
-        password (str): The password used for logging in to IEEE Dataport.
-        dataset_url (str): The URL of the dataset to be downloaded.
-        output_dir (str): The directory where the dataset will be extracted.
     """
 
     # Login 
